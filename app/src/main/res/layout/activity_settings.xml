@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.ShoppingEyes"
+    tools:context=".Settings">
+
+    <Switch
+        android:id="@+id/highContrast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="50dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="High contrast "
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.125" />
+
+    <Switch
+        android:id="@+id/cameraFlash"
+        android:layout_width="281dp"
+        android:layout_height="138dp"
+        android:layout_marginBottom="300dp"
+        android:padding="50dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="Camera flash"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/highContrast"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/highContrast"
+        app:layout_constraintTop_toBottomOf="@+id/highContrast"
+        app:layout_constraintVertical_bias="0.962" />
+
+    <Switch
+        android:id="@+id/sound"
+        android:layout_width="293dp"
+        android:layout_height="163dp"
+        android:padding="70dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="Sound"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cameraFlash"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="@+id/cameraFlash"
+        app:layout_constraintTop_toBottomOf="@+id/cameraFlash"
+        app:layout_constraintVertical_bias="0.507" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
