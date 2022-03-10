@@ -1,6 +1,6 @@
 package com.example.shoppingeyes
 
-import android.app.StatusBarManager
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
@@ -9,6 +9,7 @@ import android.widget.Switch
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.shoppingeyes.databinding.ActivitySettingsBinding
+import java.util.*
 
 class Settings : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -28,9 +29,9 @@ class Settings : AppCompatActivity() {
         session = SharedPrefs(this)
         val newTheme = session.getTheme()
         if(newTheme == "SecondTheme") {
-            theme.applyStyle(R.style.SecondTheme_ShoppingEyes, true)
+            //theme.applyStyle(R.style.SecondTheme_ShoppingEyes, true)
         }else{
-            theme.applyStyle(R.style.Theme_ShoppingEyes, true)
+           // theme.applyStyle(R.style.Theme_ShoppingEyes, true)
         }
 
         super.onCreate(savedInstanceState)
@@ -73,5 +74,7 @@ class Settings : AppCompatActivity() {
             }
         })*/
     }
+
+
 
 }

@@ -13,19 +13,4 @@
         <item name="iconTint">@color/white</item>
         <!-- Customize your theme here. -->
     </style>
-    <style name="SecondTheme.ShoppingEyes" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/blackHC</item>
-        <item name="colorPrimaryVariant">@color/blackHC</item>
-        <item name="colorOnPrimary">@color/yellowHC</item>
-        <item name="colorSecondary">@color/blackHC</item>
-        <item name="colorSecondaryVariant">@color/blackHC</item>
-        <item name="colorOnSecondary">@color/yellowHC</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <item name="titleTextColor">@color/yellowHC</item>
-        <item name="android:colorControlActivated">@color/yellowHC</item>
-        <item name="android:thumbTint">@color/yellowHC</item>
-        <item name="android:trackTint">@color/yellowHC</item>
-        <!-- Customize your theme here. -->
-    </style>
 </resources>
