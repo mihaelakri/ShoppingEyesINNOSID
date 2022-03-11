@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +58,7 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var session: SharedPrefs
 
     private lateinit var viewBinding: ActivityCameraBinding
 
@@ -88,17 +90,31 @@ class CameraActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val background : Drawable?
+        session = SharedPrefs(this)
+        val newTheme = session.getTheme()
+
+        if(newTheme == "SecondTheme") {
+            background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+        }else{
+            background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+        }
+
         val window: Window = this.window
-        val background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         window.statusBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.navigationBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.setBackgroundDrawable(background)
-        
+
         super.onCreate(savedInstanceState)
         viewBinding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        //WORKING FOR HALF A SCREEN :/
+        /*val btn: Button = findViewById<Button>(R.id.image_capture_button)
+        btn.setBackgroundDrawable(background)*/
 
         // Request camera permissions
         if (allPermissionsGranted()) {

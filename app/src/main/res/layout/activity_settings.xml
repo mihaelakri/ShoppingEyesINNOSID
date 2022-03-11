@@ -39,7 +39,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/highContrast"
         app:layout_constraintTop_toBottomOf="@+id/highContrast"
-        app:layout_constraintVertical_bias="0.962" />
+        app:layout_constraintVertical_bias="0.279" />
 
     <Switch
         android:id="@+id/sound"
@@ -53,9 +53,24 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/cameraFlash"
-        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/cameraFlash"
         app:layout_constraintTop_toBottomOf="@+id/cameraFlash"
-        app:layout_constraintVertical_bias="0.507" />
+        app:layout_constraintVertical_bias="0.127" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="239dp"
+        android:layout_height="86dp"
+        android:background="@drawable/btn_bluegreen"
+        android:text="About us"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:onClick="aboutUs"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/sound"
+        app:layout_constraintStart_toStartOf="@+id/sound"
+        app:layout_constraintTop_toBottomOf="@+id/sound" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

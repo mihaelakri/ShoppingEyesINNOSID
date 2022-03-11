@@ -1,10 +1,14 @@
 package com.example.shoppingeyes
 
 
+import android.content.Intent
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.Switch
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -16,8 +20,18 @@ class Settings : AppCompatActivity() {
     private lateinit var session: SharedPrefs
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val background : Drawable?
+        session = SharedPrefs(this)
+        val newTheme = session.getTheme()
+
+        if(newTheme == "SecondTheme") {
+            background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+        }else{
+            background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+        }
+
         val window: Window = this.window
-        val background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         window.statusBarColor = ContextCompat.getColor(this,android.R.color.transparent)
@@ -26,13 +40,8 @@ class Settings : AppCompatActivity() {
 
         //Initialize theme before super onCreate()
 
-        session = SharedPrefs(this)
-        val newTheme = session.getTheme()
-        if(newTheme == "SecondTheme") {
-            //theme.applyStyle(R.style.SecondTheme_ShoppingEyes, true)
-        }else{
-           // theme.applyStyle(R.style.Theme_ShoppingEyes, true)
-        }
+
+
 
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -75,6 +84,9 @@ class Settings : AppCompatActivity() {
         })*/
     }
 
-
+    fun aboutUs(v: View){
+        val iAboutUs = Intent(this, AboutUs::class.java)
+        startActivity(iAboutUs)
+    }
 
 }
