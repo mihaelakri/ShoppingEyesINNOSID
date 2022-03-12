@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.hardware.display.DisplayManager
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -19,7 +18,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.shoppingeyes.databinding.ActivityCameraBinding
-import com.example.shoppingeyes.ml.EuroModel
+import com.example.shoppingeyes.ml.Asd
 import com.example.shoppingeyes.utils.CameraUtils.aspectRatio
 import com.example.shoppingeyes.utils.CameraUtils.toBitmap
 import com.google.mlkit.vision.common.InputImage
@@ -44,6 +43,8 @@ class CameraActivity : AppCompatActivity() {
     private var imageAnalyzer: ImageAnalysis? = null
 
     private lateinit var cameraExecutor: ExecutorService
+
+    private var recognizeSwitch: Boolean = false
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -116,11 +117,11 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
-
+        recognizeSwitch = false
     }
 
     private fun captureVideo() {
-
+        recognizeSwitch = true
     }
 
 
@@ -159,7 +160,7 @@ class CameraActivity : AppCompatActivity() {
                 val texts = ArrayList<String>()
                 // It has metadata (Own model creator)
                 val bitmap = imageProxy.image!!.toBitmap()
-                val model = EuroModel.newInstance(applicationContext)
+                val model = Asd.newInstance(applicationContext)
                 val textImage = imageProxy.image?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
                 val visionText = textImage?.let { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(it).await() }
                 visionText?.textBlocks?.toMutableList()?.forEach {
@@ -185,22 +186,14 @@ class CameraActivity : AppCompatActivity() {
         imageProxy.close()
     }
 
-    private inner class OCR : ImageAnalysis.Analyzer {
+
+
+    private inner class Recognizer : ImageAnalysis.Analyzer {
 
         @SuppressLint("UnsafeOptInUsageError")
         override fun analyze(imageProxy: ImageProxy) {
-            extractText(imageProxy)
-            //banknoteRecognition(imageProxy)
-        }
-
-    }
-
-    private inner class BanknoteRecognizer : ImageAnalysis.Analyzer {
-
-        @SuppressLint("UnsafeOptInUsageError")
-        override fun analyze(imageProxy: ImageProxy) {
-            //extractText(imageProxy)
             banknoteRecognition(imageProxy)
+
         }
 
     }
@@ -262,7 +255,7 @@ class CameraActivity : AppCompatActivity() {
                 .build()
                 // The analyzer can then be assigned to the instance
                 .also {
-                    it.setAnalyzer(cameraExecutor, BanknoteRecognizer())
+                    it.setAnalyzer(cameraExecutor, Recognizer())
                 }
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
