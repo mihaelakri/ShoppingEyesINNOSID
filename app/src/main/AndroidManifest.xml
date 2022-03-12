@@ -43,6 +43,7 @@
         <activity
             android:name=".CameraActivity"
             android:exported="false"
+            android:screenOrientation="fullSensor"
             />
     </application>
 

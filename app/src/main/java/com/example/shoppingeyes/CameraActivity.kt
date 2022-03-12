@@ -3,9 +3,12 @@ package com.example.shoppingeyes
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.hardware.display.DisplayManager
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -66,9 +69,6 @@ class CameraActivity : AppCompatActivity() {
     }
 
 
-
-
-
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>,
         grantResults:
@@ -86,7 +86,6 @@ class CameraActivity : AppCompatActivity() {
             }
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val window: Window = this.window
@@ -114,7 +113,6 @@ class CameraActivity : AppCompatActivity() {
         viewBinding.videoCaptureButton.setOnClickListener { captureVideo() }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
-
     }
 
     private fun takePhoto() {
@@ -132,18 +130,8 @@ class CameraActivity : AppCompatActivity() {
         runBlocking {
             try {
                 val mediaImage = imageProxy.image
-                val textImage =
-                    mediaImage?.let {
-                        InputImage.fromMediaImage(
-                            it,
-                            imageProxy.imageInfo.rotationDegrees
-                        )
-                    }
-
-                val visionText = textImage?.let {
-                    TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(it) //
-                        .await()
-                }
+                val textImage = mediaImage?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
+                val visionText = textImage?.let { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(it).await() }
                 val blocks = visionText?.textBlocks?.toMutableList()
 
                 withContext(Dispatchers.Main) {
@@ -168,20 +156,27 @@ class CameraActivity : AppCompatActivity() {
         imageProxy.image ?: return
         runBlocking {
             try {
+                val texts = ArrayList<String>()
                 // It has metadata (Own model creator)
                 val bitmap = imageProxy.image!!.toBitmap()
                 val model = EuroModel.newInstance(applicationContext)
-
-
+                val textImage = imageProxy.image?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
+                val visionText = textImage?.let { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(it).await() }
+                visionText?.textBlocks?.toMutableList()?.forEach {
+                    texts.add(it.text.lowercase())
+                }
                 withContext(Dispatchers.Main) {
                     val image = TensorImage.fromBitmap(bitmap)
                     val outputs = model.process(image)
                     model.close()
                     val prob = outputs.probabilityAsCategoryList
                     val ans = prob.maxByOrNull { it.score }
-                    val resultString = ans!!.label + "\n" + ans.score.toString()
-                    println(resultString)
-
+                    //Log.d("Euro","${ans!!.label}€ - ${ans.score*100}% ")
+                    Log.d("Euro",texts.joinToString())
+                    if((texts.contains(ans!!.label) && texts.contains("euro")) || ans.score*100 >= 60){
+                        //val resultString = ans.label + "\n" + ans.score.toString()
+                        Log.d("Done","${ans.label}€ - ${ans.score*100}% ")
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -211,6 +206,35 @@ class CameraActivity : AppCompatActivity() {
     }
 
 
+    private val displayListener = object : DisplayManager.DisplayListener {
+        override fun onDisplayChanged(displayId: Int) {
+            if (viewBinding.viewFinder.display.displayId == displayId) {
+                val rotation = viewBinding.viewFinder.display.rotation
+                Log.d("asd","$rotation")
+                imageAnalyzer?.targetRotation = rotation
+            }
+        }
+
+        override fun onDisplayAdded(displayId: Int) {
+        }
+
+        override fun onDisplayRemoved(displayId: Int) {
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        displayManager.registerDisplayListener(displayListener, null)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        displayManager.unregisterDisplayListener(displayListener)
+    }
+
+
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -227,8 +251,6 @@ class CameraActivity : AppCompatActivity() {
             // Preview
             val preview = Preview.Builder()
                 .setTargetAspectRatio(screenAspectRatio) // 4:3 16:9
-                // Set initial target rotation
-                .setTargetRotation(viewBinding.viewFinder.display.rotation) //
                 .build()
                 .also {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
@@ -237,7 +259,6 @@ class CameraActivity : AppCompatActivity() {
             // ImageAnalysis - use case
             imageAnalyzer = ImageAnalysis.Builder()
                 .setTargetAspectRatio(screenAspectRatio)
-                .setTargetRotation(viewBinding.viewFinder.display.rotation)
                 .build()
                 // The analyzer can then be assigned to the instance
                 .also {
