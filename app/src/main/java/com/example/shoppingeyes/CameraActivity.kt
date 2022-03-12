@@ -173,7 +173,7 @@ class CameraActivity : AppCompatActivity() {
                     val ans = prob.maxByOrNull { it.score }
                     //Log.d("Euro","${ans!!.label}€ - ${ans.score*100}% ")
                     Log.d("Euro",texts.joinToString())
-                    if((texts.contains(ans!!.label) && texts.contains("euro")) || ans.score*100 >= 60){
+                    if((texts.contains(ans!!.label) && texts.contains("euro")) || ans.score*100 >= 70){
                         //val resultString = ans.label + "\n" + ans.score.toString()
                         Log.d("Done","${ans.label}€ - ${ans.score*100}% ")
                     }
