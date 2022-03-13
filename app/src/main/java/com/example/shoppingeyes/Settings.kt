@@ -1,6 +1,7 @@
 package com.example.shoppingeyes
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +9,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.Switch
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -19,34 +19,33 @@ class Settings : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var session: SharedPrefs
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
-        val background : Drawable?
         session = SharedPrefs(this)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+
+        //Initialize theme before super onCreate()
+        val background : Drawable?
         val newTheme = session.getTheme()
+        val contrastSwitch = binding.highContrast
 
         if(newTheme == "SecondTheme") {
             background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+            contrastSwitch.setChecked(true)
         }else{
             background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+            contrastSwitch.setChecked(false)
         }
 
         val window: Window = this.window
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-
         window.statusBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.navigationBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.setBackgroundDrawable(background)
 
-        //Initialize theme before super onCreate()
-
-
-
-
         super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(R.layout.activity_settings)
+        setContentView(binding.root)
 
         //First switch - HIGH CONTRAST
         val highContrast = findViewById<Switch>(R.id.highContrast)
