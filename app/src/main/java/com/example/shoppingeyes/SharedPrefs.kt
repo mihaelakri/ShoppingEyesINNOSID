@@ -10,8 +10,8 @@ class SharedPrefs(context: Context) {
     var con: Context? = context
 
     private val THEME = "theme"
-    private val FONT_SIZE = "font_size"
-    private val LETTER_SPACING = "letter_spacing"
+    private val FONT_SIZE = "font_size" //not implemented
+    private val LETTER_SPACING = "letter_spacing" //not implemented
     private val CAMERA_FLASH = "camera_flash"
     private val TEXT_TO_SPEECH = "tts"
 
@@ -24,14 +24,22 @@ class SharedPrefs(context: Context) {
         return prefs.getString(THEME, "Theme")
     }
 
-    fun cameraFlash(cam: Boolean){
-        editor.putString(CAMERA_FLASH, cam.toString())
+    fun setCameraFlash(cam: Boolean){
+        editor.putBoolean(CAMERA_FLASH, cam)
         editor.commit()
     }
 
-    fun sound(sound: Boolean){
-        editor.putString(TEXT_TO_SPEECH, sound.toString())
+    fun getCameraFlash(): Boolean{
+        return prefs.getBoolean(CAMERA_FLASH, true)
+    }
+
+    fun setSound(sound: Boolean){
+        editor.putBoolean(TEXT_TO_SPEECH, sound)
         editor.commit()
+    }
+
+    fun getSound(): Boolean{
+        return prefs.getBoolean(TEXT_TO_SPEECH, true)
     }
 
 

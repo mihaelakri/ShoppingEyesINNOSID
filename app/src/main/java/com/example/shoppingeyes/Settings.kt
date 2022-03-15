@@ -24,10 +24,33 @@ class Settings : AppCompatActivity() {
         session = SharedPrefs(this)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
 
-        //Initialize theme before super onCreate()
+        // variables for backgorund and theme
         val background : Drawable?
         val newTheme = session.getTheme()
+
+        //session check sound and tts
+        val cameraFlashOnOff = session.getCameraFlash()
+        val soundOnOff = session.getSound()
+
+        // Switches from front-end
         val contrastSwitch = binding.highContrast
+        val cameraTorch = binding.cameraFlash
+        val ttsEngine = binding.sound
+
+        //Initialize switch state before onCreate
+        if(cameraFlashOnOff){
+            cameraTorch.setChecked(true)
+        }else{
+            cameraTorch.setChecked(false)
+        }
+
+        if(soundOnOff){
+            ttsEngine.setChecked(true)
+        }else{
+            ttsEngine.setChecked(false)
+        }
+
+        //Initialize theme before super onCreate()
 
         if(newTheme == "SecondTheme") {
             background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
@@ -48,12 +71,10 @@ class Settings : AppCompatActivity() {
         setContentView(binding.root)
 
         //First switch - HIGH CONTRAST
-        val highContrast = findViewById<Switch>(R.id.highContrast)
 
-        highContrast?.setOnCheckedChangeListener { _, isChecked ->
+        contrastSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 session.changeTheme("SecondTheme")
-                Toast.makeText(this, "SecondTheme", Toast.LENGTH_SHORT).show()
 
             } else {
                 session.changeTheme("Theme")
@@ -61,26 +82,24 @@ class Settings : AppCompatActivity() {
         }
 
         //Second switch - CAMERA FLASH
-        val cameraFlash = findViewById<Switch>(R.id.cameraFlash)
 
-        /*cameraFlash?.setOnCheckedChangeListener({ _ , isChecked ->
-            if (isChecked){
-                // is on, do:
-            }else{
-                // is off, do:
+        cameraTorch?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                session.setCameraFlash(true)
+            } else {
+                session.setCameraFlash(false)
             }
-        })
+        }
 
         //Third switch - SOUND
-        val sound = findViewById<Switch>(R.id.sound)
 
-        sound?.setOnCheckedChangeListener({ _ , isChecked ->
-            if (isChecked){
-                // is on, do:
-            }else{
-                // is off, do:
+        ttsEngine?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                session.setSound(true)
+            } else {
+                session.setSound(false)
             }
-        })*/
+        }
     }
 
     fun aboutUs(v: View){

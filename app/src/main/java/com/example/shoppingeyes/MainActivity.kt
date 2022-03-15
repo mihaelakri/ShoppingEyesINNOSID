@@ -1,6 +1,7 @@
 package com.example.shoppingeyes
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -13,10 +14,23 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
+    private lateinit var session: SharedPrefs
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        session = SharedPrefs(this)
+
+        val background : Drawable?
+        val newTheme = session.getTheme()
+
+        //Initialize theme before super onCreate()
+
+        if(newTheme == "SecondTheme") {
+            background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+        }else{
+            background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+        }
+
         val window: Window = this.window
-        val background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         window.statusBarColor = ContextCompat.getColor(this,android.R.color.transparent)
