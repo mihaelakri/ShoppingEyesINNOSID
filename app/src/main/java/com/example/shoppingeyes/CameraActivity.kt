@@ -10,6 +10,7 @@ import android.content.res.Resources
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.util.Log
+import android.util.Size
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -229,6 +230,7 @@ class CameraActivity : AppCompatActivity() {
 
 
 
+    @SuppressLint("RestrictedApi")
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
@@ -243,16 +245,19 @@ class CameraActivity : AppCompatActivity() {
 
             // Preview
             val preview = Preview.Builder()
-                .setTargetAspectRatio(screenAspectRatio) // 4:3 16:9
+                .setTargetAspectRatio(screenAspectRatio)
+                .setMaxResolution(Size(1920,1080))// 4:3 16:9
                 .build()
                 .also {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
-
             // ImageAnalysis - use case
             imageAnalyzer = ImageAnalysis.Builder()
                 .setTargetAspectRatio(screenAspectRatio)
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setMaxResolution(Size(1920,1080))
                 .build()
+
                 // The analyzer can then be assigned to the instance
                 .also {
                     it.setAnalyzer(cameraExecutor, Recognizer())
