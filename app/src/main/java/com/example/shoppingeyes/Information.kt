@@ -1,18 +1,27 @@
 package com.example.shoppingeyes
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.Window
 import android.view.WindowManager
-import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.example.shoppingeyes.databinding.ActivityInformationBinding
 import java.util.*
 
+
 class Information : AppCompatActivity(), TextToSpeech.OnInitListener {
+    private lateinit var binding: ActivityInformationBinding
     private var tts: TextToSpeech? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityInformationBinding.inflate(layoutInflater)
+
         val window: Window = this.window
         val background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -22,9 +31,16 @@ class Information : AppCompatActivity(), TextToSpeech.OnInitListener {
         window.setBackgroundDrawable(background)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_information)
+        setContentView(binding.root)
 
         tts = TextToSpeech(this,this)
+
+        setupViewPager()
+    }
+
+    private fun setupViewPager() {
+        val viewPager = binding.container
+        viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
     }
 
     override fun onInit(status: Int) {

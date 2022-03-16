@@ -3,16 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InfoFirstFragment">
+    tools:context=".InfoSecondFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="604dp"
-        android:paddingTop="20dp"
-        android:text="Identify banknotes or read prices"
-        android:textAlignment="center"
-        android:textColor="#FF0000"
+        android:layout_height="match_parent"
+        android:text="@string/hello_blank_fragment"
+        android:textColor="#FF0909"
         android:textSize="34sp" />
 
 </FrameLayout>
