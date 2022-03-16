@@ -1,37 +1,53 @@
 package com.example.shoppingeyes
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
-import android.os.Build
+import android.content.res.Resources
+import android.hardware.display.DisplayManager
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
+import android.util.Size
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
 import com.example.shoppingeyes.databinding.ActivityCameraBinding
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.shoppingeyes.ml.Asd
+import com.example.shoppingeyes.utils.CameraUtils.aspectRatio
+import com.example.shoppingeyes.utils.CameraUtils.toBitmap
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import org.tensorflow.lite.support.image.TensorImage
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-typealias LumaListener = (luma: Double) -> Unit
+
 
 
 class CameraActivity : AppCompatActivity() {
+
+    private lateinit var viewBinding: ActivityCameraBinding
+
+    private var imageAnalyzer: ImageAnalysis? = null
+
+    private lateinit var cameraExecutor: ExecutorService
+
+    private var recognizeSwitch: Boolean = false
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.main_menu, menu)
@@ -54,14 +70,6 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var session: SharedPrefs
-    private lateinit var viewBinding: ActivityCameraBinding
-
-    private var imageCapture: ImageCapture? = null
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
-    private lateinit var cameraExecutor: ExecutorService
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>,
@@ -82,34 +90,17 @@ class CameraActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        session = SharedPrefs(this)
-        viewBinding = ActivityCameraBinding.inflate(layoutInflater)
-
-        val background : Drawable?
-        val btnPrices = viewBinding.imageCaptureButton
-        val newTheme = session.getTheme()
-
-        if(newTheme == "SecondTheme") {
-            background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
-            btnPrices.setBackgroundResource(R.drawable.btn_pinkorange_left)
-        }else{
-            background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
-            btnPrices.setBackgroundResource(R.drawable.btn_bluegreen_left)
-        }
-
         val window: Window = this.window
-
+        val background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         window.statusBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.navigationBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.setBackgroundDrawable(background)
-
-
+        
         super.onCreate(savedInstanceState)
+        viewBinding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
-
-
 
         // Request camera permissions
         if (allPermissionsGranted()) {
@@ -124,158 +115,170 @@ class CameraActivity : AppCompatActivity() {
         viewBinding.videoCaptureButton.setOnClickListener { captureVideo() }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
-
     }
 
     private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
-        val imageCapture = imageCapture ?: return
-
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-            .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
-        }
-
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
-
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-                }
-
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
-                }
-            }
-        )
+        recognizeSwitch = false
     }
 
     private fun captureVideo() {
-        val videoCapture = this.videoCapture ?: return
-
-        viewBinding.videoCaptureButton.isEnabled = false
-
-        val curRecording = recording
-        if (curRecording != null) {
-            // Stop the current recording session.
-            curRecording.stop()
-            recording = null
-            return
-        }
-
-        // create and start a new recording session
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-            .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/CameraX-Video")
-            }
-        }
-
-        val mediaStoreOutputOptions = MediaStoreOutputOptions
-            .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-            .setContentValues(contentValues)
-            .build()
-        recording = videoCapture.output
-            .prepareRecording(this, mediaStoreOutputOptions)
-            .apply {
-                if (PermissionChecker.checkSelfPermission(this@CameraActivity,
-                        Manifest.permission.RECORD_AUDIO) ==
-                    PermissionChecker.PERMISSION_GRANTED)
-                {
-                    withAudioEnabled()
-                }
-            }
-            .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
-                when(recordEvent) {
-                    is VideoRecordEvent.Start -> {
-                        viewBinding.videoCaptureButton.apply {
-                            text = getString(R.string.stop_capture)
-                            isEnabled = true
-                        }
-                    }
-                    is VideoRecordEvent.Finalize -> {
-                        if (!recordEvent.hasError()) {
-                            val msg = "Video capture succeeded: " +
-                                    "${recordEvent.outputResults.outputUri}"
-                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT)
-                                .show()
-                            Log.d(TAG, msg)
-                        } else {
-                            recording?.close()
-                            recording = null
-                            Log.e(TAG, "Video capture ends with error: " +
-                                    "${recordEvent.error}")
-                        }
-                        viewBinding.videoCaptureButton.apply {
-                            text = getString(R.string.start_capture)
-                            isEnabled = true
-                        }
-                    }
-                }
-            }
+        recognizeSwitch = true
     }
 
 
+    @SuppressLint("UnsafeOptInUsageError")
+    fun extractText(imageProxy: ImageProxy) {
+        imageProxy.image ?: return
+        runBlocking {
+            try {
+                val mediaImage = imageProxy.image
+                val textImage = mediaImage?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
+                val visionText = textImage?.let { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(it).await() }
+                val blocks = visionText?.textBlocks?.toMutableList()
+
+                withContext(Dispatchers.Main) {
+
+                    var text = ""
+                    blocks?.forEach {
+
+                        text += it.text + "\n"
+                    }
+                    println(text)
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            imageProxy.close()
+        }
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    fun banknoteRecognition(imageProxy: ImageProxy) {
+        imageProxy.image ?: return
+        runBlocking {
+            try {
+                val texts = ArrayList<String>()
+                // It has metadata (Own model creator)
+                val bitmap = imageProxy.image!!.toBitmap()
+                val model = Asd.newInstance(applicationContext)
+                val textImage = imageProxy.image?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
+                val visionText = textImage?.let { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(it).await() }
+                visionText?.textBlocks?.toMutableList()?.forEach {
+                    texts.add(it.text.lowercase())
+                }
+                withContext(Dispatchers.Main) {
+                    val image = TensorImage.fromBitmap(bitmap)
+                    val outputs = model.process(image)
+                    model.close()
+                    val prob = outputs.probabilityAsCategoryList
+                    val ans = prob.maxByOrNull { it.score }
+                    //Log.d("Euro","${ans!!.label}€ - ${ans.score*100}% ")
+                    Log.d("Euro",texts.joinToString())
+                    if((texts.contains(ans!!.label) && texts.contains("euro")) || ans.score*100 >= 70){
+                        //val resultString = ans.label + "\n" + ans.score.toString()
+                        Log.d("Done","${ans.label}€ - ${ans.score*100}% ")
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        imageProxy.close()
+    }
+
+
+
+    private inner class Recognizer : ImageAnalysis.Analyzer {
+
+        @SuppressLint("UnsafeOptInUsageError")
+        override fun analyze(imageProxy: ImageProxy) {
+            banknoteRecognition(imageProxy)
+
+        }
+
+    }
+
+
+    private val displayListener = object : DisplayManager.DisplayListener {
+        override fun onDisplayChanged(displayId: Int) {
+            if (viewBinding.viewFinder.display.displayId == displayId) {
+                val rotation = viewBinding.viewFinder.display.rotation
+                Log.d("asd","$rotation")
+                imageAnalyzer?.targetRotation = rotation
+            }
+        }
+
+        override fun onDisplayAdded(displayId: Int) {
+        }
+
+        override fun onDisplayRemoved(displayId: Int) {
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        displayManager.registerDisplayListener(displayListener, null)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        displayManager.unregisterDisplayListener(displayListener)
+    }
+
+
+
+    @SuppressLint("RestrictedApi")
     private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this@CameraActivity)
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
+            val screenAspectRatio = aspectRatio(
+                Resources.getSystem().displayMetrics.widthPixels,
+                Resources.getSystem().displayMetrics.heightPixels
+            )
+
             // Preview
             val preview = Preview.Builder()
+                .setTargetAspectRatio(screenAspectRatio)
+                .setMaxResolution(Size(1920,1080))// 4:3 16:9
                 .build()
                 .also {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
+            // ImageAnalysis - use case
+            imageAnalyzer = ImageAnalysis.Builder()
+                .setTargetAspectRatio(screenAspectRatio)
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setMaxResolution(Size(1920,1080))
+                .build()
 
-                // Select back camera as a default
-                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-                try {
-                    // Unbind use cases before rebinding
-                    cameraProvider.unbindAll()
-
-                    // Bind use cases to camera
-                    cameraProvider.bindToLifecycle(
-                        this, cameraSelector, preview)
-
-                } catch(exc: Exception) {
-                    Log.e(TAG, "Use case binding failed", exc)
+                // The analyzer can then be assigned to the instance
+                .also {
+                    it.setAnalyzer(cameraExecutor, Recognizer())
                 }
+            // Select back camera as a default
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-            }, ContextCompat.getMainExecutor(this))
-       /* val imageAnalyzer = ImageAnalysis.Builder()
-            .build()
-            .also {
-                it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
-                    Log.d(TAG, "Average luminosity: $luma")
-                })
-            }*/
+            try {
+                // Unbind use cases before rebinding
+                cameraProvider.unbindAll()
 
+                // Bind use cases to camera
+                cameraProvider.bindToLifecycle(
+                    this, cameraSelector, preview, imageAnalyzer
+                )
+
+            } catch (exc: Exception) {
+                Log.e(ContentValues.TAG, "Use case binding failed", exc)
+            }
+
+        }, ContextCompat.getMainExecutor(this))
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -288,28 +291,6 @@ class CameraActivity : AppCompatActivity() {
         cameraExecutor.shutdown()
     }
 
-    /*private class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
-
-        private fun ByteBuffer.toByteArray(): ByteArray {
-            rewind()    // Rewind the buffer to zero
-            val data = ByteArray(remaining())
-            get(data)   // Copy the buffer into a byte array
-            return data // Return the byte array
-        }
-
-        override fun analyze(image: ImageProxy) {
-
-            val buffer = image.planes[0].buffer
-            val data = buffer.toByteArray()
-            val pixels = data.map { it.toInt() and 0xFF }
-            val luma = pixels.average()
-
-            listener(luma)
-
-            image.close()
-        }
-    }*/
-
     companion object {
         private const val TAG = "CameraXApp"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
@@ -319,9 +300,6 @@ class CameraActivity : AppCompatActivity() {
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO
             ).apply {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
             }.toTypedArray()
     }
 }

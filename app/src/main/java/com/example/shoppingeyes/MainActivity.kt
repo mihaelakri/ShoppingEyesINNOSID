@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.view.Window
 import android.view.WindowManager
@@ -43,8 +44,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         tts = TextToSpeech(this,this)
 
 
-
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             val iHomeScreen = Intent(this@MainActivity, CameraActivity::class.java)
             startActivity(iHomeScreen)
             finish()
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            var result = tts!!.setLanguage(Locale.US)
+            val result = tts!!.setLanguage(Locale.US)
             tts!!.speak("Shopping eyes", TextToSpeech.QUEUE_FLUSH, null, "")
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
                 Toast.makeText(this, "Language specified not supported", Toast.LENGTH_SHORT).show()
