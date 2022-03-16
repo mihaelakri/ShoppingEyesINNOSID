@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.util.Log
@@ -46,6 +47,8 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
 
     private var recognizeSwitch: Boolean = false
+
+    private lateinit var session: SharedPrefs
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -90,16 +93,29 @@ class CameraActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        viewBinding = ActivityCameraBinding.inflate(layoutInflater)
+        session = SharedPrefs(this)
+
+        // variables for backgorund and theme
+        val background : Drawable?
+        val newTheme = session.getTheme()
+
+        if(newTheme == "SecondTheme") {
+            background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+        }else{
+            background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+        }
+
         val window: Window = this.window
-        val background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         window.statusBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.navigationBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.setBackgroundDrawable(background)
-        
+
+        viewBinding.imageCaptureButton.setBackgroundResource(R.drawable.btn_pinkorange_left)
+
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
         // Request camera permissions
