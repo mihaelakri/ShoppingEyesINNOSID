@@ -26,11 +26,13 @@
         <activity
             android:name=".Information"
             android:exported="false"
-            android:label="Information"/>
+            android:label="Information"
+            android:parentActivityName=".CameraActivity"/>
         <activity
             android:name=".Settings"
             android:exported="false"
-            android:label="Settings"/>
+            android:label="Settings"
+            android:parentActivityName=".CameraActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -73,9 +73,10 @@ class Settings : AppCompatActivity() {
         contrastSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 session.changeTheme("SecondTheme")
-
+                window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.pinkorange_bg))
             } else {
                 session.changeTheme("Theme")
+                window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.gradient_background))
             }
         }
 

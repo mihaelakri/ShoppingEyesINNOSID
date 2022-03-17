@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Size
 import android.view.*
+import com.example.shoppingeyes.R
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -33,10 +34,6 @@ import kotlinx.coroutines.withContext
 import org.tensorflow.lite.support.image.TensorImage
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
-
-
-
 
 class CameraActivity : AppCompatActivity() {
 
@@ -102,8 +99,10 @@ class CameraActivity : AppCompatActivity() {
 
         if(newTheme == "SecondTheme") {
             background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+            viewBinding.imageCaptureButton.setBackgroundResource(R.drawable.btn_pinkorange_left)
         }else{
             background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+            viewBinding.imageCaptureButton.setBackgroundResource(R.drawable.btn_bluegreen_left)
         }
 
         val window: Window = this.window
@@ -112,8 +111,6 @@ class CameraActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.navigationBarColor = ContextCompat.getColor(this,android.R.color.transparent)
         window.setBackgroundDrawable(background)
-
-        viewBinding.imageCaptureButton.setBackgroundResource(R.drawable.btn_pinkorange_left)
 
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
