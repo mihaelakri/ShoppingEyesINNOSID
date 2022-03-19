@@ -49,17 +49,10 @@ class Information : AppCompatActivity(), TextToSpeech.OnInitListener {
         setupViewPager()
     }
 
-    private fun setupViewPager() {
-        val viewPager = binding.container
-        viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
-    }
-
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             var result = tts!!.setLanguage(Locale.US)
-            //val textRead: TextView = findViewById<TextView>(R.id.speakRead)
-            tts!!.speak("Information", TextToSpeech.QUEUE_ADD, null, "")
-            //tts!!.speak(textRead.getText().toString(), TextToSpeech.QUEUE_ADD, null, "")
+            //tts!!.speak("Information", TextToSpeech.QUEUE_ADD, null, "")
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
                 Toast.makeText(this, "Language specified not supported", Toast.LENGTH_SHORT).show()
             }
@@ -68,6 +61,10 @@ class Information : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    private fun setupViewPager() {
+        val viewPager = binding.container
+        viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+    }
 
     override fun onDestroy() {
         if(tts != null){

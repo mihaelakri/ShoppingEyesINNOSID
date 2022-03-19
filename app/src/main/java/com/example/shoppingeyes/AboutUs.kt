@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import com.example.shoppingeyes.databinding.ActivityAboutUsBinding
 
 class AboutUs : AppCompatActivity() {
     private lateinit var session: SharedPrefs
+    private lateinit var binding: ActivityAboutUsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityAboutUsBinding.inflate(layoutInflater)
         val background : Drawable?
         session = SharedPrefs(this)
         val newTheme = session.getTheme()
@@ -30,6 +33,6 @@ class AboutUs : AppCompatActivity() {
         window.setBackgroundDrawable(background)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about_us)
+        setContentView(binding.root)
     }
 }

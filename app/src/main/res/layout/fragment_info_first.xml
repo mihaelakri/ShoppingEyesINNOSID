@@ -11,7 +11,7 @@
         android:id="@+id/imageView2"
         android:layout_width="372dp"
         android:layout_height="375dp"
-        android:src="@drawable/upute1"
+        android:src="@drawable/upute1a"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"

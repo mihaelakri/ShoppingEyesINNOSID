@@ -33,6 +33,10 @@
             android:exported="false"
             android:label="Settings"
             android:parentActivityName=".CameraActivity"/>
+        <activity android:name=".AboutUs"
+            android:exported="false"
+            android:label="About us"
+            android:parentActivityName=".Settings"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

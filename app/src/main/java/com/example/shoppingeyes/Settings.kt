@@ -11,7 +11,6 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.example.shoppingeyes.databinding.ActivitySettingsBinding
-import java.util.*
 
 class Settings : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -101,7 +100,7 @@ class Settings : AppCompatActivity() {
         }
     }
 
-    fun aboutUs(v: View){
+    fun aboutUs(v: View) {
         val iAboutUs = Intent(this, AboutUs::class.java)
         startActivity(iAboutUs)
     }
