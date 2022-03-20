@@ -41,7 +41,7 @@ class About : AppCompatActivity(), TextToSpeech.OnInitListener {
         tts = TextToSpeech(this,this)
 
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_about)
     }
 
     override fun onInit(status: Int) {

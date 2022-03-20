@@ -25,8 +25,9 @@
         android:theme="@style/Theme.ShoppingEyes">
         <activity
             android:name=".About"
-            android:exported="false"
-            android:label="About Shopping eyes"/>
+            android:exported="true"
+            android:label="About Shopping eyes"
+            android:parentActivityName=".Settings"/>
         <activity
             android:name=".Information"
             android:exported="false"

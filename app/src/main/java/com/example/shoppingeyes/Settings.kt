@@ -1,6 +1,5 @@
 package com.example.shoppingeyes
 
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
