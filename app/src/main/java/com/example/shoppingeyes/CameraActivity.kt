@@ -10,6 +10,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.hardware.display.DisplayManager
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.util.Size
 import android.view.*
@@ -32,20 +33,18 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import org.tensorflow.lite.support.image.TensorImage
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
 
-class CameraActivity : AppCompatActivity() {
-
+class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var viewBinding: ActivityCameraBinding
-
     private var imageAnalyzer: ImageAnalysis? = null
-
     private lateinit var cameraExecutor: ExecutorService
-
     private var recognizeSwitch: Boolean = false
-
     private lateinit var session: SharedPrefs
+    private var tts: TextToSpeech? = null
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -99,10 +98,10 @@ class CameraActivity : AppCompatActivity() {
 
         if(newTheme == "SecondTheme") {
             background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
-            viewBinding.imageCaptureButton.setBackgroundResource(R.drawable.btn_pinkorange_left)
+            viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_pinkorange_left)
         }else{
             background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
-            viewBinding.imageCaptureButton.setBackgroundResource(R.drawable.btn_bluegreen_left)
+            viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_bluegreen_left)
         }
 
         val window: Window = this.window
@@ -115,6 +114,9 @@ class CameraActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
 
+        //Text to speech initialization
+        tts = TextToSpeech(this,this)
+
         // Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
@@ -124,10 +126,20 @@ class CameraActivity : AppCompatActivity() {
         }
 
         // Set up the listeners for take photo and video capture buttons
-        viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
-        viewBinding.videoCaptureButton.setOnClickListener { captureVideo() }
+        viewBinding.identifyBanknotes.setOnClickListener {
+            speakOut("identify banknotes")
+            takePhoto()
+        }
+        viewBinding.readPrices.setOnClickListener {
+            speakOut("read the prices")
+            captureVideo()
+        }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+    }
+
+    private fun speakOut(text: String) {
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
     private fun takePhoto() {
@@ -156,7 +168,7 @@ class CameraActivity : AppCompatActivity() {
 
                         text += it.text + "\n"
                     }
-                    println(text)
+                    Log.d("tag", text)
                 }
 
             } catch (e: Exception) {
@@ -206,8 +218,12 @@ class CameraActivity : AppCompatActivity() {
 
         @SuppressLint("UnsafeOptInUsageError")
         override fun analyze(imageProxy: ImageProxy) {
-            banknoteRecognition(imageProxy)
-
+            if(recognizeSwitch){
+                extractText(imageProxy)
+            }
+            else{
+                banknoteRecognition(imageProxy)
+            }
         }
 
     }
@@ -300,6 +316,10 @@ class CameraActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        if(tts != null){
+            tts!!.stop()
+            tts!!.shutdown()
+        }
         super.onDestroy()
         cameraExecutor.shutdown()
     }
@@ -314,5 +334,16 @@ class CameraActivity : AppCompatActivity() {
                 Manifest.permission.RECORD_AUDIO
             ).apply {
             }.toTypedArray()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            var result = tts!!.setLanguage(Locale.US)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+                Toast.makeText(this, "Language specified not supported", Toast.LENGTH_SHORT).show()
+            }
+        }else{
+            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show()
+        }
     }
 }

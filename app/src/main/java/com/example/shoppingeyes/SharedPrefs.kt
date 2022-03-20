@@ -30,7 +30,7 @@ class SharedPrefs(context: Context) {
     }
 
     fun getCameraFlash(): Boolean{
-        return prefs.getBoolean(CAMERA_FLASH, true)
+        return prefs.getBoolean(CAMERA_FLASH, false)
     }
 
     fun setSound(sound: Boolean){

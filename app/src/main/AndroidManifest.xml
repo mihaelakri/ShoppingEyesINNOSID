@@ -24,19 +24,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShoppingEyes">
         <activity
+            android:name=".About"
+            android:exported="false"
+            android:label="About Shopping eyes"/>
+        <activity
             android:name=".Information"
             android:exported="false"
             android:label="Information"
-            android:parentActivityName=".CameraActivity"/>
+            android:parentActivityName=".CameraActivity" />
         <activity
             android:name=".Settings"
             android:exported="false"
             android:label="Settings"
-            android:parentActivityName=".CameraActivity"/>
-        <activity android:name=".AboutUs"
-            android:exported="false"
-            android:label="About us"
-            android:parentActivityName=".Settings"/>
+            android:parentActivityName=".CameraActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -49,8 +50,7 @@
         <activity
             android:name=".CameraActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor"
-            />
+            android:screenOrientation="fullSensor" />
     </application>
 
 </manifest>

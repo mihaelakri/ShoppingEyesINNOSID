@@ -12,16 +12,16 @@
         android:layout_height="match_parent"/>
 
     <Button
-        android:id="@+id/image_capture_button"
-        android:layout_width="219dp"
-        android:layout_height="124dp"
+        android:id="@+id/identifyBanknotes"
+        android:layout_width="219sp"
+        android:layout_height="124sp"
         android:background="@drawable/btn_bluegreen_left"
         android:elevation="2dp"
         android:letterSpacing="0.3"
         android:drawableTop="@drawable/ic_moeny_24"
         android:drawableTint="@color/white"
         android:paddingTop="20dp"
-        android:text="Prices"
+        android:text="Banknotes"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -31,16 +31,16 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/video_capture_button"
-        android:layout_width="199dp"
-        android:layout_height="124dp"
+        android:id="@+id/readPrices"
+        android:layout_width="199sp"
+        android:layout_height="124sp"
         android:background="@drawable/btn_inactive_right"
         android:elevation="2dp"
         android:letterSpacing="0.3"
         android:drawableTop="@drawable/ic_moeny_24"
         android:drawableTint="@color/white"
         android:paddingTop="20dp"
-        android:text="Banknotes"
+        android:text="Prices"
         android:textColor="@color/light_gray"
         android:textSize="20sp"
         android:textStyle="bold"
