@@ -14,7 +14,6 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.util.Size
 import android.view.*
-import com.example.shoppingeyes.R
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -45,6 +44,7 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var recognizeSwitch: Boolean = false
     private lateinit var session: SharedPrefs
     private var tts: TextToSpeech? = null
+    lateinit var cameraControl: CameraControl
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -136,6 +136,7 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+
     }
 
     private fun speakOut(text: String) {
@@ -169,6 +170,7 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         text += it.text + "\n"
                     }
                     Log.d("tag", text)
+                    //tts!!.speak(text, TextToSpeech.QUEUE_ADD, null, "")
                 }
 
             } catch (e: Exception) {
@@ -201,8 +203,9 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     //Log.d("Euro","${ans!!.label}€ - ${ans.score*100}% ")
                     Log.d("Euro",texts.joinToString())
                     if((texts.contains(ans!!.label) && texts.contains("euro")) || ans.score*100 >= 70){
-                        //val resultString = ans.label + "\n" + ans.score.toString()
-                        Log.d("Done","${ans.label}€ - ${ans.score*100}% ")
+                        val resultString = "${ans.label} Euro"
+                        Log.d("Done","${ans.label} - ${ans.score * 100}%")
+                        speakOut(resultString)
                     }
                 }
             } catch (e: Exception) {
@@ -233,7 +236,7 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         override fun onDisplayChanged(displayId: Int) {
             if (viewBinding.viewFinder.display.displayId == displayId) {
                 val rotation = viewBinding.viewFinder.display.rotation
-                Log.d("asd","$rotation")
+                Log.d("rotation","$rotation")
                 imageAnalyzer?.targetRotation = rotation
             }
         }
@@ -247,6 +250,7 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onStart() {
         super.onStart()
+        startCamera()
         val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
         displayManager.registerDisplayListener(displayListener, null)
     }
@@ -294,14 +298,18 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
+
+
             try {
                 // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
 
                 // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
+                val camera  = cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageAnalyzer
                 )
+                cameraControl = camera.cameraControl
+                cameraControl.enableTorch(session.getCameraFlash())
 
             } catch (exc: Exception) {
                 Log.e(ContentValues.TAG, "Use case binding failed", exc)
@@ -338,7 +346,7 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            var result = tts!!.setLanguage(Locale.US)
+            val result = tts!!.setLanguage(Locale.US)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
                 Toast.makeText(this, "Language specified not supported", Toast.LENGTH_SHORT).show()
             }
