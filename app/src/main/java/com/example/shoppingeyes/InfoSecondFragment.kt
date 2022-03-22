@@ -68,11 +68,11 @@ class InfoSecondFragment : Fragment(), TextToSpeech.OnInitListener {
     }
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            var result = tts!!.setLanguage(Locale.US)
+            val result = tts!!.setLanguage(Locale.US)
             val textRead3: TextView = binding.textView2
             val textRead4: TextView = binding.textView5
-            tts!!.speak(textRead3.getText().toString(), TextToSpeech.QUEUE_ADD, null, "")
-            tts!!.speak(textRead4.getText().toString(), TextToSpeech.QUEUE_ADD, null, "")
+            tts!!.speak(textRead3.text.toString(), TextToSpeech.QUEUE_ADD, null, "")
+            tts!!.speak(textRead4.text.toString(), TextToSpeech.QUEUE_ADD, null, "")
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
                 Toast.makeText(activity, "Language specified not supported", Toast.LENGTH_SHORT).show()
             }

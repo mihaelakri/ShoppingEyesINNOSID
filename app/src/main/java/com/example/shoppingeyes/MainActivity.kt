@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         //Initialize theme before super onCreate()
 
-        if(newTheme == "SecondTheme") {
-            background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+        background = if(newTheme == "SecondTheme") {
+            ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
         }else{
-            background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+            ContextCompat.getDrawable(this, R.drawable.gradient_background)
         }
 
         val window: Window = this.window
