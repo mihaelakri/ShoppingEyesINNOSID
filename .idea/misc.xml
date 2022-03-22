@@ -3,12 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Korisnik/Desktop/MENTORSTVO/INNOSID/Valencia/ShoppingEyesINNOSID/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2985" />
-        <entry key="..\:/Users/Korisnik/Desktop/MENTORSTVO/INNOSID/Valencia/ShoppingEyesINNOSID/app/src/main/res/drawable/gradient_background.xml" value="0.2985" />
-        <entry key="..\:/Users/Korisnik/Desktop/MENTORSTVO/INNOSID/Valencia/ShoppingEyesINNOSID/app/src/main/res/drawable/launcher_background.xml" value="0.2985" />
-        <entry key="..\:/Users/Korisnik/Desktop/MENTORSTVO/INNOSID/Valencia/ShoppingEyesINNOSID/app/src/main/res/layout/fragment_info_third.xml" value="0.25" />
-        <entry key="..\:/Users/Korisnik/Desktop/MENTORSTVO/INNOSID/Valencia/ShoppingEyesINNOSID/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2985" />
-        <entry key="..\:/Users/Korisnik/Desktop/MENTORSTVO/INNOSID/Valencia/ShoppingEyesINNOSID/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2985" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1805" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/black_bg.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/btn_bluegreen.xml" value="0.2595" />
@@ -19,6 +13,7 @@
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1035" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/ic_outline_info_24.xml" value="0.1035" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/info_btn.xml" value="0.1645" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/launcher_background.xml" value="0.242" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/pinkorange_bg.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/tab_indicator.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/tab_indicator_unselected.xml" value="0.2595" />
@@ -43,7 +38,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
