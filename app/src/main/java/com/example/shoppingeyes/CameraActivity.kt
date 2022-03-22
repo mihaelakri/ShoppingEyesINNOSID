@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.shoppingeyes.databinding.ActivityCameraBinding
 import com.example.shoppingeyes.ml.Model
+import com.example.shoppingeyes.ml.Oldmodel
 import com.example.shoppingeyes.utils.CameraUtils.aspectRatio
 import com.example.shoppingeyes.utils.CameraUtils.toBitmap
 import com.google.mlkit.vision.common.InputImage
@@ -189,6 +190,7 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 // It has metadata (Own model creator)
                 val bitmap = imageProxy.image!!.toBitmap()
                 val model = Model.newInstance(applicationContext)
+                //val model = Oldmodel.newInstance(applicationContext)
                 val textImage = imageProxy.image?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
                 val visionText = textImage?.let { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(it).await() }
                 visionText?.textBlocks?.toMutableList()?.forEach {
