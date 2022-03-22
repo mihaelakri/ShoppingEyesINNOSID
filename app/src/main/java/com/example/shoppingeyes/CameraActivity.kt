@@ -128,10 +128,14 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         // Set up the listeners for take photo and video capture buttons
         viewBinding.identifyBanknotes.setOnClickListener {
+            viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_bluegreen_left)
+            viewBinding.readPrices.setBackgroundResource(R.drawable.btn_inactive_right)
             speakOut("identify banknotes")
             takePhoto()
         }
         viewBinding.readPrices.setOnClickListener {
+            viewBinding.readPrices.setBackgroundResource(R.drawable.btn_bluegreen_right)
+            viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_innactive_left)
             speakOut("read the prices")
             captureVideo()
         }

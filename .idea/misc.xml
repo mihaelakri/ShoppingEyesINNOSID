@@ -7,10 +7,13 @@
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/black_bg.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/btn_bluegreen.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/btn_bluegreen_left.xml" value="0.1035" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/btn_bluegreen_right.xml" value="0.2235" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/btn_inactive_right.xml" value="0.1645" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/btn_innactive_left.xml" value="0.2235" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/btn_pinkorange_left.xml" value="0.1645" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/gradient_background.xml" value="0.1805" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1035" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/ic_moeny_24.xml" value="0.2135" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/ic_outline_info_24.xml" value="0.1035" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/info_btn.xml" value="0.1645" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/launcher_background.xml" value="0.242" />
@@ -19,6 +22,7 @@
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/tab_indicator_unselected.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/tab_selected.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/tab_selector.xml" value="0.2595" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/vector.xml" value="0.2235" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/white_btn.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_about.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_about_us.xml" value="0.22735507246376813" />
