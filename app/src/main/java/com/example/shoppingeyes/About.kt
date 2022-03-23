@@ -17,7 +17,7 @@ class About : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityAboutBinding.inflate(layoutInflater)
+
         session = SharedPrefs(this)
 
         // variables for backgorund and theme
@@ -41,7 +41,10 @@ class About : AppCompatActivity(), TextToSpeech.OnInitListener {
         tts = TextToSpeech(this,this)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about)
+        binding = ActivityAboutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setupViewPager()
     }
 
     override fun onInit(status: Int) {
@@ -54,6 +57,11 @@ class About : AppCompatActivity(), TextToSpeech.OnInitListener {
         }else{
             Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setupViewPager() {
+        val viewPager = binding.container2
+        viewPager.adapter = AboutPagerAdapter(supportFragmentManager)
     }
 
     override fun onDestroy() {

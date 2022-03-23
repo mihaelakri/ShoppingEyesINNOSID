@@ -24,7 +24,7 @@
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/tab_selector.xml" value="0.2595" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/vector.xml" value="0.2235" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/drawable/white_btn.xml" value="0.2595" />
-        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_about.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_about.xml" value="0.12" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_about_us.xml" value="0.22735507246376813" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_camera.xml" value="0.264" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_home_screen.xml" value="0.1" />
@@ -32,9 +32,14 @@
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_read_prices_banknotes.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/activity_settings.xml" value="0.2" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/fragment_hrvoje.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/fragment_info_first.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/fragment_info_second.xml" value="0.264" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/fragment_info_third.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/fragment_iva.xml" value="0.2" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/fragment_joao.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/fragment_mihaela.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/layout/fragment_zsolt.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/menu/main.xml" value="0.264" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/menu/main_menu.xml" value="0.4" />
         <entry key="..\:/Users/Mihaela/AndroidStudioProjects/ShoppingEyes2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2285" />
