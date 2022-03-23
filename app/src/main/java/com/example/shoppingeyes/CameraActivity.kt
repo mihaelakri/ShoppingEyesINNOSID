@@ -193,8 +193,8 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 val texts = ArrayList<String>()
                 // It has metadata (Own model creator)
                 val bitmap = imageProxy.image!!.toBitmap()
-                val model = Model.newInstance(applicationContext)
-                //val model = Oldmodel.newInstance(applicationContext)
+                //val model = Model.newInstance(applicationContext)
+                val model = Oldmodel.newInstance(applicationContext)
                 val textImage = imageProxy.image?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
                 val visionText = textImage?.let { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(it).await() }
                 visionText?.textBlocks?.toMutableList()?.forEach {
