@@ -93,6 +93,8 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         viewBinding = ActivityCameraBinding.inflate(layoutInflater)
         session = SharedPrefs(this)
 
+        val ttsOnOff = session.getSound()
+
         // variables for backgorund and theme
         val background : Drawable?
         val newTheme = session.getTheme()
@@ -100,9 +102,11 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if(newTheme == "SecondTheme") {
             background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
             viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_pinkorange_left)
+            theme.applyStyle(R.style.DarkTheme_ShoppingEyes, true)
         }else{
             background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
             viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_bluegreen_left)
+            theme.applyStyle(R.style.Theme_ShoppingEyes, true)
         }
 
         val window: Window = this.window
@@ -128,13 +132,21 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         // Set up the listeners for take photo and video capture buttons
         viewBinding.identifyBanknotes.setOnClickListener {
-            viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_bluegreen_left)
+            if(newTheme == "SecondTheme"){
+                viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_pinkorange_left)
+            }else{
+                viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_bluegreen_left)
+            }
             viewBinding.readPrices.setBackgroundResource(R.drawable.btn_inactive_right)
             speakOut("identify banknotes")
             takePhoto()
         }
         viewBinding.readPrices.setOnClickListener {
-            viewBinding.readPrices.setBackgroundResource(R.drawable.btn_bluegreen_right)
+            if(newTheme == "SecondTheme"){
+                viewBinding.readPrices.setBackgroundResource(R.drawable.btn_pinkorange_right)
+            }else{
+                viewBinding.readPrices.setBackgroundResource(R.drawable.btn_bluegreen_right)
+            }
             viewBinding.identifyBanknotes.setBackgroundResource(R.drawable.btn_innactive_left)
             speakOut("read the prices")
             captureVideo()
@@ -145,7 +157,9 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun speakOut(text: String) {
-        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+        if(session.getSound()){
+            tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     private fun takePhoto() {
@@ -175,7 +189,7 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         text += it.text + "\n"
                     }
                     Log.d("tag", text)
-                    //tts!!.speak(text, TextToSpeech.QUEUE_ADD, null, "")
+                    tts!!.speak(text, TextToSpeech.QUEUE_ADD, null, "")
                 }
 
             } catch (e: Exception) {
@@ -356,8 +370,6 @@ class CameraActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
                 Toast.makeText(this, "Language specified not supported", Toast.LENGTH_SHORT).show()
             }
-        }else{
-            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show()
         }
     }
 }

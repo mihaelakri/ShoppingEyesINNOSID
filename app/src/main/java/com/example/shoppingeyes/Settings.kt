@@ -54,9 +54,11 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         if(newTheme == "SecondTheme") {
             background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+            darkTheme()
             contrastSwitch.setChecked(true)
         }else{
             background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+            lightTheme()
             contrastSwitch.setChecked(false)
         }
 
@@ -79,11 +81,13 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
             if (isChecked) {
                 session.changeTheme("SecondTheme")
                 window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.pinkorange_bg))
-                speakOut("High contrast theme")
+                darkTheme()
+                if(session.getSound()) speakOut("High contrast theme")
             } else {
                 session.changeTheme("Theme")
                 window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.gradient_background))
-                speakOut("Custom theme")
+                lightTheme()
+                if(session.getSound()) speakOut("Custom theme")
             }
         }
 
@@ -92,10 +96,10 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         cameraTorch?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 session.setCameraFlash(true)
-                speakOut("Camera flash on")
+                if(session.getSound()) speakOut("Camera flash on")
             } else {
                 session.setCameraFlash(false)
-                speakOut("Camera flash off")
+                if(session.getSound()) speakOut("Camera flash off")
             }
         }
 
@@ -104,10 +108,10 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsEngine?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 session.setSound(true)
-                speakOut("Text to speech on")
+                if(session.getSound()) speakOut("Text to speech on")
             } else {
                 session.setSound(false)
-                speakOut("Text to speech off")
+                if(session.getSound()) speakOut("Text to speech off")
             }
         }
     }
@@ -118,14 +122,12 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
+        if (status == TextToSpeech.SUCCESS && session.getSound()) {
             var result = tts!!.setLanguage(Locale.US)
             tts!!.speak("Settings", TextToSpeech.QUEUE_ADD, null, "")
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
                 Toast.makeText(this, "Language specified not supported", Toast.LENGTH_SHORT).show()
             }
-        }else{
-            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -140,5 +142,20 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         super.onDestroy()
     }
-
+    private fun lightTheme(){
+        theme.applyStyle(R.style.Theme_ShoppingEyes, true)
+        binding.highContrast.setTextColor(ContextCompat.getColor( this, R.color.white))
+        binding.cameraFlash.setTextColor(ContextCompat.getColor( this, R.color.white))
+        binding.sound.setTextColor(ContextCompat.getColor( this, R.color.white))
+        binding.button.setBackgroundResource(R.drawable.white_btn)
+        binding.button.setTextColor(ContextCompat.getColor(this, R.color.teal_700))
+    }
+    private fun darkTheme(){
+        theme.applyStyle(R.style.DarkTheme_ShoppingEyes, true)
+        binding.highContrast.setTextColor(ContextCompat.getColor( this, R.color.black))
+        binding.cameraFlash.setTextColor(ContextCompat.getColor( this, R.color.black))
+        binding.sound.setTextColor(ContextCompat.getColor( this, R.color.black))
+        binding.button.setBackgroundResource(R.drawable.black_btn)
+        binding.button.setTextColor(ContextCompat.getColor(this, R.color.light_green))
+    }
 }

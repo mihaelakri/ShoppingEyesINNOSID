@@ -11,4 +11,6 @@
     <color name="blackHC">#212121</color>
     <color name="yellowHC">#ffea00</color>
     <color name="light_gray">#b0bec5</color>
+    <color name="light_green">#35CC00</color>
+
 </resources>

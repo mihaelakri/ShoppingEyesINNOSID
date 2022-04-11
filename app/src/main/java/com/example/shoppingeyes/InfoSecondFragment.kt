@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.shoppingeyes.databinding.FragmentInfoFirstBinding
 import com.example.shoppingeyes.databinding.FragmentInfoSecondBinding
 import java.util.*
@@ -27,10 +29,13 @@ class InfoSecondFragment : Fragment(), TextToSpeech.OnInitListener {
     private var param1: String? = null
     private var param2: String? = null
     private var tts: TextToSpeech? = null
+    private lateinit var session: SharedPrefs
     private lateinit var binding: FragmentInfoSecondBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = FragmentInfoSecondBinding.inflate(layoutInflater)
+        session = SharedPrefs(requireActivity().applicationContext)
+
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -44,7 +49,23 @@ class InfoSecondFragment : Fragment(), TextToSpeech.OnInitListener {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_info_second, container, false)
+        val view = inflater.inflate(R.layout.fragment_info_second, container, false)
+
+        val img: ImageView = view.findViewById<View>(R.id.imageView3) as ImageView
+        val title: TextView = view.findViewById<View>(R.id.textView2) as TextView
+        val text: TextView = view.findViewById<View>(R.id.textView5) as TextView
+
+        if(session.getTheme() == "SecondTheme"){
+            img.setImageResource(R.drawable.uputa2contrast)
+            title.setTextColor(ContextCompat.getColor(requireActivity().applicationContext, R.color.light_green))
+            text.setTextColor(ContextCompat.getColor(requireActivity().applicationContext, R.color.light_green))
+        }else{
+            img.setImageResource(R.drawable.upute2a)
+            title.setTextColor(ContextCompat.getColor(requireActivity().applicationContext, R.color.black))
+            text.setTextColor(ContextCompat.getColor(requireActivity().applicationContext, R.color.black))
+        }
+
+        return view
     }
 
     companion object {
@@ -67,7 +88,7 @@ class InfoSecondFragment : Fragment(), TextToSpeech.OnInitListener {
             }
     }
     override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
+        if (status == TextToSpeech.SUCCESS && session.getSound()) {
             val result = tts!!.setLanguage(Locale.US)
             val textRead3: TextView = binding.textView2
             val textRead4: TextView = binding.textView5
@@ -76,8 +97,6 @@ class InfoSecondFragment : Fragment(), TextToSpeech.OnInitListener {
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
                 Toast.makeText(activity, "Language specified not supported", Toast.LENGTH_SHORT).show()
             }
-        }else{
-            Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -24,14 +24,22 @@ class Information : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding = ActivityInformationBinding.inflate(layoutInflater)
         session = SharedPrefs(this)
 
+        val ttsOnOff = session.getSound()
+
         // variables for backgorund and theme
         val background : Drawable?
         val newTheme = session.getTheme()
 
         if(newTheme == "SecondTheme") {
             background = ContextCompat.getDrawable(this, R.drawable.pinkorange_bg)
+            binding.root.setBackgroundResource(R.color.black)
+            binding.tabs.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.light_green))
+            binding.tabs.setSelectedTabIndicator(ContextCompat.getDrawable(this, R.drawable.tab_indicator_hc))
+            theme.applyStyle(R.style.DarkTheme_ShoppingEyes, true)
         }else{
             background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+            binding.root.setBackgroundResource(R.color.white)
+            theme.applyStyle(R.style.Theme_ShoppingEyes, true)
         }
 
         val window: Window = this.window
@@ -56,8 +64,6 @@ class Information : AppCompatActivity(), TextToSpeech.OnInitListener {
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
                 Toast.makeText(this, "Language specified not supported", Toast.LENGTH_SHORT).show()
             }
-        }else{
-            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show()
         }
     }
 
